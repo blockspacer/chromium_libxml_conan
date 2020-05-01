@@ -199,6 +199,9 @@ endif(ENABLE_COBALT)
 
 set_property(TARGET ${STATIC_LIB_NAME} PROPERTY CXX_STANDARD 17)
 
+# POSITION_INDEPENDENT_CODE for -fPIC
+set_property(TARGET ${STATIC_LIB_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 target_compile_definitions(${STATIC_LIB_NAME} PRIVATE
   # Define GLIBXML_STATIC as nothing to match how GLIBXML.h (an internal header)
   # defines GLIBXML_STATIC, otherwise we get the macro redefined warning from
