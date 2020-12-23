@@ -213,9 +213,6 @@ endif()
 
 set_property(TARGET GLIBXML PROPERTY CXX_STANDARD 17)
 
-if(NOT DEFINED ENABLE_COBALT)
-  message(FATAL_ERROR "NOT DEFINED: ENABLE_COBALT")
-endif(NOT DEFINED ENABLE_COBALT)
 if(ENABLE_COBALT)
   if(NOT DEFINED cobalt_starboard_headers_only_LIB)
     message(FATAL_ERROR "NOT DEFINED: cobalt_starboard_headers_only_LIB")

@@ -9,7 +9,7 @@ project(${PROJECT_NAME}
   VERSION ${PROJECT_VERSION}
   LANGUAGES CXX C)
 
-option(ENABLE_COBALT ON)
+set(ENABLE_COBALT FALSE CACHE BOOL "ENABLE_COBALT")
 
 option(USE_SYSTEM_ZLIB FALSE)
 
@@ -271,9 +271,6 @@ else()
   )
 endif()
 
-if(NOT DEFINED ENABLE_COBALT)
-  message(FATAL_ERROR "NOT DEFINED: ENABLE_COBALT")
-endif(NOT DEFINED ENABLE_COBALT)
 if(ENABLE_COBALT)
   if(NOT DEFINED cobalt_starboard_headers_only_LIB)
     message(FATAL_ERROR "NOT DEFINED: cobalt_starboard_headers_only_LIB")

@@ -64,7 +64,7 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
       "shared=False",
       "debug=False",
       "enable_sanitizers=False",
-      "enable_cobalt=True",
+      "enable_cobalt=False",
       "use_system_zlib=False"
       # build
       #"*:shared=False"
