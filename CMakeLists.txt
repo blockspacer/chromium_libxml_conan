@@ -183,6 +183,8 @@ include(cmake/CommonOptions)
 
 include(cmake/ProjectFiles)
 
+add_library(${STATIC_LIB_NAME}-test-includes INTERFACE)
+
 # $<INSTALL_INTERFACE:...> is exported using install(EXPORT)
 # $<BUILD_INTERFACE:...> is exported using export(), or when the target is used by another target in the same buildsystem
 macro(add_relative_include_dir TARGET VISIBILITY_BUILD VISIBILITY_INSTALL NEW_ELEM)
@@ -190,6 +192,8 @@ macro(add_relative_include_dir TARGET VISIBILITY_BUILD VISIBILITY_INSTALL NEW_EL
     ${VISIBILITY_BUILD} "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${NEW_ELEM}>"
     ${VISIBILITY_INSTALL} "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}/${NEW_ELEM}>"
   )
+  target_include_directories( ${TARGET}-test-includes SYSTEM INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/${NEW_ELEM} )
 endmacro(add_relative_include_dir)
 
 add_library(${STATIC_LIB_NAME} STATIC
@@ -212,6 +216,7 @@ if(TARGET_EMSCRIPTEN)
   add_relative_include_dir(${STATIC_LIB_NAME} PUBLIC PUBLIC "chromium/web_ports/libxml_wrapper/emscripten/include")
   # requires config.h
   add_relative_include_dir(${STATIC_LIB_NAME} PRIVATE PRIVATE "chromium/web_ports/libxml_wrapper/emscripten")
+  add_relative_include_dir(${STATIC_LIB_NAME} PRIVATE PRIVATE "include/chromium/web_ports/libxml_wrapper/emscripten")
 elseif(TARGET_LINUX)
   # requires libxml/xmlversion.h
   add_relative_include_dir(${STATIC_LIB_NAME} PUBLIC PUBLIC "chromium/third_party/libxml/linux/include")

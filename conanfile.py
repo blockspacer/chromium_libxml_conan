@@ -36,7 +36,8 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
     # TODO (!!!)
     # license = "MIT"
 
-    version = "master"
+    version = "stable"
+    commit = "b73d9be6d6d07a37371854a766eee67e683e3d59"
 
     # TODO (!!!)
     #url = "https://github.com/blockspacer/CXXCTP"
@@ -158,7 +159,7 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
 
         if self._is_tests_enabled():
             self.build_requires("catch2/[>=2.1.0]@bincrafters/stable")
-            self.build_requires("conan_gtest/release-1.10.0@conan/stable")
+            self.build_requires("conan_gtest/stable@conan/stable")
             self.build_requires("FakeIt/[>=2.0.4]@gasuketsu/stable")
 
         if self.options.enable_tsan \
@@ -226,6 +227,7 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
 
     def package(self):
         self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+        #self.copy("*", dst="third_party", src="{}/include/chromium/third_party/libxml/src/include/libxml".format(self._source_subfolder))
         cmake = self._configure_cmake()
         cmake.install()
 
@@ -275,6 +277,7 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
         #self.cpp_info.libs = ["chromium_libxml"]
 
         self.cpp_info.includedirs = ["include"]
+
         self.cpp_info.libs = tools.collect_libs(self)
         self.cpp_info.libdirs = ["lib"]
         self.cpp_info.bindirs = ["bin"]
