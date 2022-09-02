@@ -27,8 +27,29 @@ else()
   message(FATAL_ERROR "platform not supported")
 endif()
 
+if(LIBXML2_WITH_SAX1)
+  message(FATAL_ERROR "TODO: LIBXML2_WITH_SAX1 not supported")
+	#list(APPEND libxml_SOURCES 
+  #  "src/DOCBparser.c")
+endif()
+
+if(LIBXML2_WITH_TRIO)
+  #"src/triodef.h"
+  #"src/trionan.h"
+  #"src/trio.c"
+  #"src/trio.h"
+  #"src/triodef.h"
+  # Note: xpath.c #includes trionan.c
+  #"src/trionan.c"
+  #"src/triop.h"
+  #"src/triostr.c"
+  #"src/triostr.h"
+	list(APPEND libxml_SOURCES 
+    "src/trio.c" 
+    "src/triostr.c")
+endif()
+
 list(APPEND libxml_SOURCES
-  #"src/DOCBparser.c"
   "src/HTMLparser.c"
   "src/HTMLtree.c"
 
@@ -111,17 +132,6 @@ list(APPEND libxml_SOURCES
   "src/threads.c"
   "src/timsort.h"
   "src/tree.c"
-  "src/triodef.h"
-  "src/trionan.h"
-
-  #"src/trio.c"
-  #"src/trio.h"
-  #"src/triodef.h"
-  # Note: xpath.c #includes trionan.c
-  #"src/trionan.c"
-  #"src/triop.h"
-  #"src/triostr.c"
-  #"src/triostr.h"
   "src/uri.c"
   "src/valid.c"
 
@@ -165,5 +175,18 @@ list(APPEND libxml_SOURCES
   "chromium/libxml_utils.cc"
   "chromium/libxml_utils.h"
 )
+
+# TODO
+#if(WIN32)
+#	list(APPEND libxml_SOURCES "win32/libxml2.rc")
+#	file(
+#		WRITE
+#		${CMAKE_CURRENT_BINARY_DIR}/rcVersion.h
+#		"#define LIBXML_MAJOR_VERSION ${LIBXML_MAJOR_VERSION}\n"
+#		"#define LIBXML_MINOR_VERSION ${LIBXML_MINOR_VERSION}\n"
+#		"#define LIBXML_MICRO_VERSION ${LIBXML_MICRO_VERSION}\n"
+#		"#define LIBXML_DOTTED_VERSION \"${VERSION}\"\n"
+#	)
+#endif()
 
 list(TRANSFORM libxml_SOURCES PREPEND "${libxml_DIR}")

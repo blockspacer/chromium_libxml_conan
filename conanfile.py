@@ -15,16 +15,6 @@ from distutils.util import strtobool
 
 conan_build_helper = python_requires("conan_build_helper/[~=0.0]@conan/stable")
 
-# Users locally they get the 1.0.0 version,
-# without defining any env-var at all,
-# and CI servers will append the build number.
-# USAGE
-# version = get_version("1.0.0")
-# BUILD_NUMBER=-pre1+build2 conan export-pkg . my_channel/release
-def get_version(version):
-    bn = os.getenv("BUILD_NUMBER")
-    return (version + bn) if bn else version
-
 # conan runs the methods in this order:
 # config_options(),
 # configure(),
@@ -46,7 +36,7 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
     # TODO (!!!)
     # license = "MIT"
 
-    version = get_version("stable")
+    version = "stable"
     commit = "b73d9be6d6d07a37371854a766eee67e683e3d59"
 
     # TODO (!!!)
@@ -56,6 +46,45 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
     topics = ('c++')
 
     options = {
+      # "LIBXML2_WITH_AUTOMATA": [True, False],
+      "LIBXML2_WITH_C14N": [True, False],
+      "LIBXML2_WITH_CATALOG": [True, False],
+      "LIBXML2_WITH_DEBUG": [True, False],
+      "LIBXML2_WITH_DOCB": [True, False],
+      # LIBXML2_WITH_EXPR
+      "LIBXML2_WITH_FTP": [True, False],
+      "LIBXML2_WITH_HTML": [True, False],
+      "LIBXML2_WITH_HTTP": [True, False],
+      "LIBXML2_WITH_ICONV": [True, False],
+      "LIBXML2_WITH_ICU": [True, False],
+      "LIBXML2_WITH_ISO8859X": [True, False],
+      "LIBXML2_WITH_LEGACY": [True, False],
+      "LIBXML2_WITH_LZMA": [True, False],
+      "LIBXML2_WITH_MEM_DEBUG": [True, False],
+      "LIBXML2_WITH_MODULES": [True, False],
+      "LIBXML2_WITH_OUTPUT": [True, False],
+      "LIBXML2_WITH_PATTERN": [True, False],
+      "LIBXML2_WITH_PROGRAMS": [True, False],
+      "LIBXML2_WITH_PUSH": [True, False],
+      "LIBXML2_WITH_PYTHON": [True, False],
+      "LIBXML2_WITH_READER": [True, False],
+      "LIBXML2_WITH_REGEXPS": [True, False],
+      "LIBXML2_WITH_RUN_DEBUG": [True, False],
+      "LIBXML2_WITH_SAX1": [True, False],
+      "LIBXML2_WITH_SCHEMAS": [True, False],
+      "LIBXML2_WITH_SCHEMATRON": [True, False],
+      "LIBXML2_WITH_TESTS": [True, False],
+      "LIBXML2_WITH_THREADS": [True, False],
+      "LIBXML2_WITH_THREAD_ALLOC": [True, False],
+      "LIBXML2_WITH_TREE": [True, False],
+      #"LIBXML2_WITH_TRIO": [True, False],
+      #"LIBXML2_WITH_UNICODE": [True, False],
+      "LIBXML2_WITH_VALID": [True, False],
+      "LIBXML2_WITH_WRITER": [True, False],
+      "LIBXML2_WITH_XINCLUDE": [True, False],
+      "LIBXML2_WITH_XPATH": [True, False],
+      "LIBXML2_WITH_XPTR": [True, False],
+      "LIBXML2_WITH_ZLIB": [True, False],
       "enable_ubsan": [True, False],
       "enable_asan": [True, False],
       "enable_msan": [True, False],
@@ -68,6 +97,42 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
     }
 
     default_options = (
+      #"LIBXML2_WITH_AUTOMATA=False",
+      "LIBXML2_WITH_C14N=False",
+      "LIBXML2_WITH_CATALOG=False",
+      "LIBXML2_WITH_DEBUG=False",
+      "LIBXML2_WITH_DOCB=False",
+      "LIBXML2_WITH_FTP=False",
+      "LIBXML2_WITH_HTML=True",
+      "LIBXML2_WITH_HTTP=False",
+      "LIBXML2_WITH_ICONV=False",
+      "LIBXML2_WITH_ICU=True",
+      "LIBXML2_WITH_ISO8859X=False",
+      "LIBXML2_WITH_LEGACY=False",
+      "LIBXML2_WITH_LZMA=False",
+      "LIBXML2_WITH_MEM_DEBUG=False",
+      "LIBXML2_WITH_MODULES=False",
+      "LIBXML2_WITH_OUTPUT=True",
+      "LIBXML2_WITH_PATTERN=False",
+      "LIBXML2_WITH_PROGRAMS=False",
+      "LIBXML2_WITH_PUSH=True",
+      "LIBXML2_WITH_PYTHON=False",
+      "LIBXML2_WITH_READER=True",
+      "LIBXML2_WITH_REGEXPS=False",
+      "LIBXML2_WITH_RUN_DEBUG=False",
+      "LIBXML2_WITH_SAX1=False",
+      "LIBXML2_WITH_SCHEMAS=False",
+      "LIBXML2_WITH_SCHEMATRON=False",
+      "LIBXML2_WITH_TESTS=False",
+      "LIBXML2_WITH_THREADS=True",
+      "LIBXML2_WITH_THREAD_ALLOC=False",
+      "LIBXML2_WITH_TREE=True",
+      "LIBXML2_WITH_VALID=False",
+      "LIBXML2_WITH_WRITER=True",
+      "LIBXML2_WITH_XINCLUDE=False",
+      "LIBXML2_WITH_XPATH=True",
+      "LIBXML2_WITH_XPTR=False",
+      "LIBXML2_WITH_ZLIB=True",
       "enable_ubsan=False",
       "enable_asan=False",
       "enable_msan=False",
@@ -205,6 +270,9 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
             var_value = "ON" if value_str == 'True' else "OFF" if value_str == 'False' else value_str
             cmake.definitions[var_name] = var_value
 
+        for option, value in self.options.items():
+             self.add_cmake_option(cmake, str(option).upper(), value)
+
         add_cmake_option("ENABLE_COBALT", self.options.enable_cobalt)
 
         add_cmake_option("ENABLE_SANITIZERS", self.options.enable_sanitizers)
@@ -212,6 +280,8 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
         add_cmake_option("ENABLE_TESTS", self._is_tests_enabled())
 
         add_cmake_option("USE_SYSTEM_ZLIB", self.options.use_system_zlib)
+
+        add_cmake_option("LIBXML2_WITH_THREADS", self.options.LIBXML2_WITH_THREADS)
 
         cmake.definitions["ENABLE_UBSAN"] = 'ON'
         if not self.options.enable_ubsan:
@@ -236,34 +306,36 @@ class chromium_libxml_conan_project(conan_build_helper.CMakePackage):
         return cmake
 
     def package(self):
-        self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
-        #self.copy("*", dst="third_party", src="{}/include/chromium/third_party/libxml/src/include/libxml".format(self._source_subfolder))
-        cmake = self._configure_cmake()
-        cmake.install()
+        with tools.vcvars(self.settings, only_diff=False): # https://github.com/conan-io/conan/issues/6577
+          self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+          #self.copy("*", dst="third_party", src="{}/include/chromium/third_party/libxml/src/include/libxml".format(self._source_subfolder))
+          cmake = self._configure_cmake()
+          cmake.install()
 
     def build(self):
-        cmake = self._configure_cmake()
-        if self.settings.compiler == 'gcc':
-            cmake.definitions["CMAKE_C_COMPILER"] = "gcc-{}".format(
-                self.settings.compiler.version)
-            cmake.definitions["CMAKE_CXX_COMPILER"] = "g++-{}".format(
-                self.settings.compiler.version)
+        with tools.vcvars(self.settings, only_diff=False): # https://github.com/conan-io/conan/issues/6577
+          cmake = self._configure_cmake()
+          if self.settings.compiler == 'gcc':
+              cmake.definitions["CMAKE_C_COMPILER"] = "gcc-{}".format(
+                  self.settings.compiler.version)
+              cmake.definitions["CMAKE_CXX_COMPILER"] = "g++-{}".format(
+                  self.settings.compiler.version)
 
-        #cmake.definitions["CMAKE_TOOLCHAIN_FILE"] = 'conan_paths.cmake'
+          #cmake.definitions["CMAKE_TOOLCHAIN_FILE"] = 'conan_paths.cmake'
 
-        # The CMakeLists.txt file must be in `source_folder`
-        cmake.configure(source_folder=".")
+          # The CMakeLists.txt file must be in `source_folder`
+          cmake.configure(source_folder=".")
 
-        cpu_count = tools.cpu_count()
-        self.output.info('Detected %s CPUs' % (cpu_count))
+          cpu_count = tools.cpu_count()
+          self.output.info('Detected %s CPUs' % (cpu_count))
 
-        # -j flag for parallel builds
-        cmake.build(args=["--", "-j%s" % cpu_count])
+          # -j flag for parallel builds
+          cmake.build(args=["--", "-j%s" % cpu_count])
 
-        if self._is_tests_enabled():
-          self.output.info('Running tests')
-          self.run('ctest --parallel %s' % (cpu_count))
-          # TODO: use cmake.test()
+          if self._is_tests_enabled():
+            self.output.info('Running tests')
+            self.run('ctest --parallel %s' % (cpu_count))
+            # TODO: use cmake.test()
 
     # Importing files copies files from the local store to your project.
     def imports(self):

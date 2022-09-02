@@ -18,8 +18,8 @@ class TestPackageConan(conan_build_helper.CMakePackage):
     generators = "cmake"
 
     # sets cmake variables required to use clang 10 from conan
-    def _is_compile_with_llvm_tools_enabled(self):
-      return self._environ_option("COMPILE_WITH_LLVM_TOOLS", default = 'false')
+    #def _is_compile_with_llvm_tools_enabled(self):
+    #  return self._environ_option("COMPILE_WITH_LLVM_TOOLS", default = 'false')
 
     # installs clang 10 from conan
     def _is_llvm_tools_enabled(self):
@@ -44,12 +44,17 @@ class TestPackageConan(conan_build_helper.CMakePackage):
     def build(self):
         cmake = CMake(self)
 
-        cmake.definitions['ENABLE_UBSAN'] = self.options['chromium_libxml'].enable_ubsan
-        cmake.definitions['ENABLE_ASAN'] = self.options['chromium_libxml'].enable_asan
-        cmake.definitions['ENABLE_MSAN'] = self.options['chromium_libxml'].enable_msan
-        cmake.definitions['ENABLE_TSAN'] = self.options['chromium_libxml'].enable_tsan
+        for option, value in self.options['chromium_libxml'].items():
+            self.add_cmake_option(cmake, str(option).upper(), value)
 
-        self.add_cmake_option(cmake, "COMPILE_WITH_LLVM_TOOLS", self._is_compile_with_llvm_tools_enabled())
+        #cmake.definitions['LIBXML2_WITH_THREADS'] = self.options['chromium_libxml'].LIBXML2_WITH_THREADS
+
+        #cmake.definitions['ENABLE_UBSAN'] = self.options['chromium_libxml'].enable_ubsan
+        #cmake.definitions['ENABLE_ASAN'] = self.options['chromium_libxml'].enable_asan
+        #cmake.definitions['ENABLE_MSAN'] = self.options['chromium_libxml'].enable_msan
+        #cmake.definitions['ENABLE_TSAN'] = self.options['chromium_libxml'].enable_tsan
+
+        #self.add_cmake_option(cmake, "COMPILE_WITH_LLVM_TOOLS", self._is_compile_with_llvm_tools_enabled())
 
         cmake.configure()
         cmake.build()

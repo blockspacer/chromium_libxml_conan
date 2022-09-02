@@ -1,5 +1,12 @@
 ﻿include_guard( DIRECTORY )
 
+if(MSVC AND BUILD_SHARED_LIBS)
+	install(FILES $<TARGET_PDB_FILE:${PROJ_LIB_NAME}> 
+    DESTINATION ${CMAKE_INSTALL_BINDIR} 
+    CONFIGURATIONS Debug RelWithDebInfo 
+    COMPONENT debug)
+endif()
+
 # NOTE: preserve directory structure
 install(
   DIRECTORY
@@ -11,7 +18,7 @@ install(
 
 install(
   TARGETS
-    ${STATIC_LIB_NAME}
+    ${PROJ_LIB_NAME}
   EXPORT
     ${PROJECT_NAME}-config
   DESTINATION
@@ -25,14 +32,14 @@ install(
   DESTINATION
     cmake)
 
-set_target_properties(${STATIC_LIB_NAME}
+set_target_properties(${PROJ_LIB_NAME}
   PROPERTIES
-    EXPORT_NAME ${STATIC_LIB_NAME})
+    EXPORT_NAME ${PROJ_LIB_NAME})
 
 # see Package Configuration File (PCF) https://jfreeman.dev/blog/2019/05/22/trying-conan-with-modern-cmake:-dependencies/
 export(
   TARGETS
-    ${STATIC_LIB_NAME}
+    ${PROJ_LIB_NAME}
   NAMESPACE
     ${PROJECT_NAME}::
   FILE
@@ -43,7 +50,7 @@ export(PACKAGE ${PROJECT_NAME})
 
 install(
   TARGETS
-    ${STATIC_LIB_NAME}
+    ${PROJ_LIB_NAME}
   INCLUDES DESTINATION
     ${CMAKE_INSTALL_INCLUDEDIR}
   PUBLIC_HEADER DESTINATION
